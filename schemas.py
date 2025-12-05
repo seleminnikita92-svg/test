@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
 
-# User Schemas
 class UserCreate(BaseModel):
     username: str = Field(min_length=3, max_length=50)
     email: EmailStr
@@ -15,8 +14,6 @@ class User(BaseModel):
 
     class Config:
         from_attributes = True
-
-# Artist Schemas
 class ArtistCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     genre: str = Field(min_length=1, max_length=100)
@@ -29,8 +26,6 @@ class Artist(BaseModel):
 
     class Config:
         from_attributes = True
-
-# Album Schemas
 class AlbumCreate(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     release_year: int = Field(gt=1900, lt=2100)
@@ -45,8 +40,6 @@ class Album(BaseModel):
 
     class Config:
         from_attributes = True
-
-# Playlist Schemas
 class PlaylistCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     description: Optional[str] = Field(default=None, max_length=1000)
@@ -59,8 +52,6 @@ class Playlist(BaseModel):
 
     class Config:
         from_attributes = True
-
-# Token Schema
 class Token(BaseModel):
     access_token: str
     token_type: str

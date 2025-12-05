@@ -19,8 +19,6 @@ async def startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-# ===== АУТЕНТИФИКАЦИЯ =====
-
 @app.post(
     "/register", 
     response_model=schemas.User,
@@ -28,7 +26,6 @@ async def startup():
     description="Создает нового пользователя. Первый пользователь с username='admin' становится администратором."
 )
 async def register_user(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
-    # Проверка существующего пользователя
     result = await db.execute(
         select(models.User).filter(
             (models.User.username == user.username) | 
@@ -42,7 +39,6 @@ async def register_user(user: schemas.UserCreate, db: AsyncSession = Depends(get
         else:
             raise HTTPException(status_code=400, detail="Email already registered")
 
-    # Первый пользователь с username="admin" становится админом
     is_admin = (user.username == "admin")
     
     hashed_password = security.get_password_hash(user.password)
@@ -84,8 +80,6 @@ async def login(
         "access_token": access_token,
         "token_type": "bearer"
     }
-
-# ===== ARTISTS (ПОЛНЫЙ CRUD) =====
 
 @app.post(
     "/artists", 
@@ -210,8 +204,6 @@ async def delete_artist(
     
     return {"message": "Artist deleted successfully"}
 
-# ===== ALBUMS =====
-
 @app.post(
     "/albums", 
     response_model=schemas.Album,
@@ -276,8 +268,6 @@ async def delete_album(
     
     return {"message": "Album deleted successfully"}
 
-# ===== PLAYLISTS =====
-
 @app.post(
     "/playlists", 
     response_model=schemas.Playlist,
@@ -341,8 +331,6 @@ async def delete_playlist(
     await db.commit()
     
     return {"message": "Playlist deleted successfully"}
-
-# ===== АДМИН-ПАНЕЛЬ =====
 
 @app.get(
     "/admin/users",

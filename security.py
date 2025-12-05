@@ -35,7 +35,6 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-# проверка пользователя по токену
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
@@ -58,7 +57,6 @@ async def get_current_user(
         
     return user
 
-# проверка прав админа
 async def get_current_admin_user(
     current_user: models.User = Depends(get_current_user)
 ):
